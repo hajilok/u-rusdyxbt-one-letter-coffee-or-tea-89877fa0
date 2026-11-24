@@ -10,8 +10,8 @@ Deterministic `program/v1` entry for the [make.fun](https://make.fun/r/41fw6r6c)
 
 - **Entrypoint**: `main.ts` (Node 22 native TypeScript, zero external dependencies, deterministic output).
 - **Output**: Writes `/output/entry.txt` (or `$MAKEFUN_OUTPUT_DIR/entry.txt` when testing locally) with **no trailing newline**:
-  - Character: `ℬ` (`U+212C`, `SCRIPT CAPITAL B`) — a single Basic Multilingual Plane uppercase letter (`\p{Lu}`, `NFKC === "B"`) representing **tea (B)**.
-  - Gate compliance: strict UTF-8 (`e2 84 ac`, 3 bytes), `length === 1` (UTF-16 code units), `[...text].length === 1` (Unicode code points), non-whitespace.
+  - Character: `𝓑` (`U+1D4D1`, `MATHEMATICAL BOLD SCRIPT CAPITAL B`) — a single uppercase Unicode letter (`\p{Lu}`, `NFKC === "B"`) representing **tea (B)**.
+  - Gate compliance: strict UTF-8 (`f0 9d 93 91`, 4 bytes), `[...text].length === 1` (1 Unicode code point / 1 grapheme cluster), non-whitespace.
 
 ## Local Verification
 

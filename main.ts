@@ -5,13 +5,14 @@ import { join } from 'node:path';
  * Entry for make.fun competition: One Letter: Coffee or Tea
  * (u-rusdyxbt-one-letter-coffee-or-tea-89877fa0)
  *
- * Emits U+212C (SCRIPT CAPITAL B: "ℬ") as our single-character UTF-8 choice
- * for tea (B). U+212C is the sole calligraphic BMP uppercase letter (\p{Lu},
- * NFKC "B") with utf16 length = 1 and code point count = 1, written with no
- * trailing newline to satisfy the strict 1-to-1 character gate.
+ * Emits U+1D4D1 (MATHEMATICAL BOLD SCRIPT CAPITAL B: "𝓑") as our single
+ * Unicode code-point choice for tea (B). U+1D4D1 is an uppercase letter
+ * (\p{Lu}, NFKC "B") whose full-bodied calligraphic strokes express steeped
+ * warmth and poise in one character, written with no trailing newline to
+ * satisfy the strict 1-to-1 character gate.
  */
-const ENTRY_GLYPH: string = '\u212C';
-const EXPECTED_BYTES: Uint8Array = Uint8Array.from([0xe2, 0x84, 0xac]);
+const ENTRY_GLYPH: string = '\u{1D4D1}';
+const EXPECTED_BYTES: Uint8Array = Uint8Array.from([0xf0, 0x9d, 0x93, 0x91]);
 
 function resolveOutputDir(): string {
   const configured = process.env.MAKEFUN_OUTPUT_DIR?.trim();
@@ -31,12 +32,13 @@ function assertGateInvariants(bytes: Uint8Array): void {
   const decoder = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true });
   const decoded = decoder.decode(bytes);
   const codePoints = [...decoded];
+  const graphemes = [...new Intl.Segmenter('en', { granularity: 'grapheme' }).segment(decoded)];
 
-  if (decoded.length !== 1 || codePoints.length !== 1) {
-    throw new Error(`Gate violation: utf16=${decoded.length}, codePoints=${codePoints.length}`);
+  if (codePoints.length !== 1 || graphemes.length !== 1) {
+    throw new Error(`Gate violation: codePoints=${codePoints.length}, graphemes=${graphemes.length}`);
   }
-  if (decoded.trim().length !== 1) {
-    throw new Error('Gate violation: output is whitespace');
+  if (decoded.trim() !== decoded || decoded.trim().length === 0) {
+    throw new Error('Gate violation: output contains whitespace');
   }
   if (!/^\p{Lu}$/u.test(decoded) || decoded.normalize('NFKC') !== 'B') {
     throw new Error('Invariant violation: output is not a single uppercase letter B');
